@@ -1,5 +1,9 @@
-﻿using System;
+﻿using AreaFigurasGeometricas.Entities;
+using AreaFigurasGeometricas.Entities.Enums;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Security.Cryptography;
 
 namespace AreaFigurasGeometricas
 {
@@ -7,26 +11,82 @@ namespace AreaFigurasGeometricas
     {
         static void Main(string[] args)
         {
-            double A, B, C, triangulo, circulo, trapezio, quadrado, retangulo, pi = 3.14159;
+            List<Shape> list = new List<Shape>();
 
-            Console.WriteLine("Digite o valor de A, B e C separados por espaços Exemplo: 3.0 4.0 5.2");
-            string[] entrada = Console.ReadLine().Split(' ');
+            Console.Write("Digite o número de figuras desejadas: ");
+            int n = int.Parse(Console.ReadLine());
 
-            A = double.Parse(entrada[0], CultureInfo.InvariantCulture);
-            B = double.Parse(entrada[1], CultureInfo.InvariantCulture);
-            C = double.Parse(entrada[2], CultureInfo.InvariantCulture);
+            while (n > 0)
+                for (int i = 1; i <= n; i++)
+                {
+                    Console.WriteLine($"Figura #{i}:");
+                    Console.WriteLine("Digite r para Retângulo, c para Círculo, q para Quadrado, tra para Trapézio ou tri para Triângulo:");
+                    string escolha = Console.ReadLine();
 
-            triangulo = (A * C) / 2;
-            circulo = pi * Math.Pow(C, 2);
-            trapezio = (C * (A + B)) / 2;
-            quadrado = Math.Pow(B, 2);
-            retangulo = A * B;
+                    Console.Write("Color (Black/Blue/Red): ");
+                    Color color = Enum.Parse<Color>(Console.ReadLine());
 
-            Console.WriteLine($"TRIANGULO: {triangulo.ToString("F3",CultureInfo.InvariantCulture)}");
-            Console.WriteLine($"CIRCULO: {circulo.ToString("F3", CultureInfo.InvariantCulture)}");
-            Console.WriteLine($"TRAPEZIO: {trapezio.ToString("F3",CultureInfo.InvariantCulture)}");
-            Console.WriteLine($"QUADRADO: {quadrado.ToString("F3",CultureInfo.InvariantCulture)}");
-            Console.WriteLine($"RETANGULO: {retangulo.ToString("F3",CultureInfo.InvariantCulture)}");
+                    double widht, side, radius, biggestBase, smallestBase, height, b;
+
+                    switch (escolha.ToUpper())
+                    {
+                        case "R":
+                            Console.Write("Largura: ");
+                            widht = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
+                            Console.Write("Altura: ");
+                            height = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
+                            list.Add(new Rectangle(widht, height, color));
+                            n--;
+                            break;
+
+                        case "C":
+                            Console.Write("Raio: ");
+                            radius = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
+                            list.Add(new Circle(radius, color));
+                            n--;
+                            break;
+
+                        case "Q":
+                            Console.Write("Lado: ");
+                            side = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
+                            list.Add(new Square(side, color));
+                            n--;
+                            break;
+
+                        case "TRI":
+                            Console.Write("Base: ");
+                            b = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
+                            Console.Write("Altura: ");
+                            height = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
+                            list.Add(new Triangle(b, height, color));
+                            n--;
+                            break;
+
+                        case "TRA":
+                            Console.Write("Maior Base: ");
+                            biggestBase = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
+                            Console.Write("Maior Base: ");
+                            smallestBase = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
+                            Console.Write("Altura: ");
+                            height = double.Parse(Console.ReadLine());
+                            list.Add(new Trapeze(biggestBase, smallestBase, height, color));
+                            n--;
+                            break;
+
+                        default:
+                            Console.WriteLine("Escolha inválida");
+                            break;
+                    }
+
+                }
+
+            Console.WriteLine();
+            Console.WriteLine("Área das figuras");
+
+            foreach (Shape shape in list)
+            {
+                Console.WriteLine(shape);
+            }
         }
     }
 }
